@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="bg-white rounded shadow p-8">
+    <h1 class="text-2xl font-semibold mb-2">Earthquakes Database</h1>
+    <p class="text-gray-700 mb-4">
+      Total rows in database: <strong>{{ total or 0 }}</strong>
+    </p>
+    <ol class="list-decimal ml-6 text-sm text-gray-700 space-y-1">
+      <li>Use <em>Init DB (CSV)</em> to load the CSV into SQLite.</li>
+      <li>Use <em>Magnitude Range</em> to query by <code>mag</code> and see <code>time, lat, long, id</code>.</li>
+      <li>Use <em>Net Delete</em> to count & delete rows for a given <code>net</code> and see remaining count.</li>
+      <li>Use <em>Edit</em> to find a record by <code>id</code> (or exact <code>time</code>) and modify attributes.</li>
+    </ol>
+  </div>
+{% endblock %}

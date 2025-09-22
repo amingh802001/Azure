@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="bg-white rounded shadow p-8">
+    <h2 class="text-xl font-semibold mb-4">Magnitude Range</h2>
+    <form method="post" class="flex gap-3 mb-6">
+      <input type="number" step="0.1" name="low"  value="{{ form.low  if form else '' }}" placeholder="M low"  class="border rounded p-2 w-40" />
+      <input type="number" step="0.1" name="high" value="{{ form.high if form else '' }}" placeholder="M high" class="border rounded p-2 w-40" />
+      <button class="px-4 py-2 rounded bg-indigo-600 text-white">Search</button>
+    </form>
+
+    {% if results %}
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="text-left border-b">
+            <th class="py-2 pr-4">time</th>
+            <th class="py-2 pr-4">lat</th>
+            <th class="py-2 pr-4">long</th>
+            <th class="py-2 pr-4">id</th>
+            <th class="py-2 pr-4">mag</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in results %}
+            <tr class="border-b">
+              <td class="py-1 pr-4">{{ r.time }}</td>
+              <td class="py-1 pr-4">{{ r.lat }}</td>
+              <td class="py-1 pr-4">{{ r.long }}</td>
+              <td class="py-1 pr-4">{{ r.id }}</td>
+              <td class="py-1 pr-4">{{ r.mag }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+{% endblock %}

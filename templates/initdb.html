@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="bg-white rounded shadow p-8 max-w-xl">
+    <h2 class="text-xl font-semibold mb-4">Initialize Database from CSV</h2>
+    <p class="text-sm text-gray-600 mb-3">CSV must include: <code>time, lat, long, mag, nst, net, id</code></p>
+    <form method="post" enctype="multipart/form-data" class="space-y-3">
+      <input type="file" name="csv_file" accept=".csv" required class="block w-full text-sm" />
+      <button class="px-4 py-2 rounded bg-indigo-600 text-white">Load CSV</button>
+    </form>
+  </div>
+{% endblock %}

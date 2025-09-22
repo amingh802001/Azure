@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="bg-white rounded shadow p-8 max-w-2xl">
+    <h2 class="text-xl font-semibold mb-4">Find & Edit Record</h2>
+
+    {% if state.step == 'find' %}
+      <form method="post" class="grid sm:grid-cols-2 gap-3 mb-4">
+        <input type="hidden" name="step" value="find" />
+        <input name="id"   placeholder="Enter id (preferred)" class="border rounded p-2" />
+        <input name="time" placeholder="Or exact time (YYYY-MM-DD HH:MM:SS)" class="border rounded p-2" />
+        <button class="px-4 py-2 rounded bg-indigo-600 text-white sm:col-span-2">Find</button>
+      </form>
+
+    {% elif state.step == 'edit' %}
+      <form method="post" class="grid sm:grid-cols-2 gap-3">
+        <input type="hidden" name="step" value="edit" />
+        <input type="hidden" name="orig_id" value="{{ state.id }}" />
+
+        <label class="block">
+          <div class="text-xs text-gray-500">id (read-only)</div>
+          <input value="{{ state.id }}" disabled class="border rounded p-2 w-full bg-gray-100" />
+        </label>
+
+        <label class="block">
+          <div class="text-xs text-gray-500">time</div>
+          <input name="time" value="{{ state.record.time }}" class="border rounded p-2 w-full" />
+        </label>
+
+        <label class="block">
+          <div class="text-xs text-gray-500">lat</div>
+          <input name="lat" value="{{ state.record.lat }}" class="border rounded p-2 w-full" />
+        </label>
+
+        <label class="block">
+          <div class="text-xs text-gray-500">long</div>
+          <input name="long" value="{{ state.record.long }}" class="border rounded p-2 w-full" />
+        </label>
+
+        <label class="block">
+          <div class="text-xs text-gray-500">mag</div>
+          <input name="mag" value="{{ state.record.mag }}" class="border rounded p-2 w-full" />
+        </label>
+
+        <label class="block">
+          <div class="text-xs text-gray-500">nst</div>
+          <input name="nst" value="{{ state.record.nst }}" class="border rounded p-2 w-full" />
+        </label>
+
+        <label class="block sm:col-span-2">
+          <div class="text-xs text-gray-500">net</div>
+          <input name="net" value="{{ state.record.net }}" class="border rounded p-2 w-full" />
+        </label>
+
+        <button class="px-4 py-2 rounded bg-indigo-600 text-white sm:col-span-2">Save</button>
+      </form>
+    {% endif %}
+  </div>
+{% endblock %}

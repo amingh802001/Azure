@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="bg-white rounded shadow p-8 max-w-xl">
+    <h2 class="text-xl font-semibold mb-4">Delete by net</h2>
+    <form method="post" class="flex gap-3 mb-4">
+      <input name="net" placeholder="e.g., ci" class="border rounded p-2 w-48" />
+      <button class="px-4 py-2 rounded bg-indigo-600 text-white">Count & Delete</button>
+    </form>
+
+    {% if info %}
+      <div class="text-sm text-gray-700">
+        Deleted <strong>{{ info.deleted }}</strong> row(s) where <code>net</code> = <strong>{{ info.net }}</strong>.<br/>
+        Remaining rows: <strong>{{ info.remaining }}</strong>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
