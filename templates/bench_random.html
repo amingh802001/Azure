@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="bg-white rounded shadow p-8">
+    <h2 class="text-xl font-semibold mb-4">Random Queries (single-row lookups)</h2>
+    <form method="post" class="grid md:grid-cols-3 gap-4 mb-6">
+      <label class="block">
+        <div class="text-sm text-gray-600"># Queries (1–1000)</div>
+        <input name="n" type="number" min="1" max="1000" value="{{ form.n }}" class="border rounded p-2 w-full">
+      </label>
+
+      <label class="flex items-center gap-2">
+        <input type="checkbox" name="use_cache" {% if form.use_cache %}checked{% endif %}>
+        <span class="text-sm text-gray-700">Use cache (Redis)</span>
+      </label>
+
+      <label class="flex items-center gap-2">
+        <input type="checkbox" name="reuse_ids" {% if form.reuse_ids %}checked{% endif %}>
+        <span class="text-sm text-gray-700">Reuse same ID set</span>
+      </label>
+
+      <div class="md:col-span-3">
+        <button class="px-4 py-2 rounded bg-indigo-600 text-white">Run</button>
+      </div>
+    </form>
+
+    {% if stats %}
+      <div class="text-sm mb-4">
+        <div><strong>Queries:</strong> {{ stats.count }}</div>
+        <div><strong>Total time:</strong> {{ "%.3f"|format(stats.total_sec) }} s</div>
+        <div><strong>Avg per query:</strong> {{ "%.2f"|format(stats.avg_ms) }} ms</div>
+        <div><strong>Cache:</strong> {{ 'ON' if stats.cached else 'OFF' }}</div>
+        <div><strong>Cache hits:</strong> {{ stats.cache_hits }} &nbsp; | &nbsp; <strong>misses:</strong> {{ stats.cache_misses }}</div>
+      </div>
+
+      {% if results %}
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead>
+              <tr class="text-left border-b">
+                <th class="py-2 pr-4">time</th>
+                <th class="py-2 pr-4">lat</th>
+                <th class="py-2 pr-4">long</th>
+                <th class="py-2 pr-4">id</th>
+                <th class="py-2 pr-4">mag</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in results %}
+                <tr class="border-b">
+                  <td class="py-1 pr-4">{{ r.time }}</td>
+                  <td class="py-1 pr-4">{{ r.latitude }}</td>
+                  <td class="py-1 pr-4">{{ r.longitude }}</td>
+                  <td class="py-1 pr-4">{{ r.id }}</td>
+                  <td class="py-1 pr-4">{{ r.mag }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <p class="text-xs text-gray-500 mt-2">Showing up to 25 rows.</p>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock %}

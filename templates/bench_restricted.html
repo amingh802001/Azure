@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="bg-white rounded shadow p-8">
+    <h2 class="text-xl font-semibold mb-4">Restricted Queries (batch) + Cache</h2>
+
+    <form method="post" class="grid md:grid-cols-2 gap-4 mb-6">
+      <label class="block">
+        <div class="text-sm text-gray-600">Mode</div>
+        <select name="mode" class="border rounded p-2 w-full">
+          <option value="place_ca"  {% if form.mode=='place_ca' %}selected{% endif %}>California only (place contains " CA")</option>
+          <option value="distance"  {% if form.mode=='distance' %}selected{% endif %}>Within radius of lat/long</option>
+          <option value="time_range" {% if form.mode=='time_range' %}selected{% endif %}>Time range</option>
+          <option value="mag_range"  {% if form.mode=='mag_range' %}selected{% endif %}>Magnitude range</option>
+        </select>
+      </label>
+
+      <label class="block">
+        <div class="text-sm text-gray-600"># Rows (1–1000)</div>
+        <input name="n" type="number" min="1" max="1000" value="{{ form.n }}" class="border rounded p-2 w-full" />
+      </label>
+
+      <label class="block">
+        <div class="text-sm text-gray-600">Use cache (Redis)</div>
+        <input type="checkbox" name="use_cache" {% if form.use_cache %}checked{% endif %} />
+      </label>
+
+      <!-- Distance params -->
+      <div class="md:col-span-2 grid grid-cols-3 gap-3">
+        <label class="block">
+          <div class="text-xs text-gray-600">lat</div>
+          <input name="lat" value="{{ form.lat }}" class="border rounded p-2 w-full" />
+        </label>
+        <label class="block">
+          <div class="text-xs text-gray-600">lon</div>
+          <input name="lon" value="{{ form.lon }}" class="border rounded p-2 w-full" />
+        </label>
+        <label class="block">
+          <div class="text-xs text-gray-600">radius_km</div>
+          <input name="radius_km" value="{{ form.radius_km }}" class="border rounded p-2 w-full" />
+        </label>
+      </div>
+
+      <!-- Time range -->
+      <div class="md:col-span-2 grid grid-cols-2 gap-3">
+        <label class="block">
+          <div class="text-xs text-gray-600">t_start (YYYY-MM-DD HH:MM:SS)</div>
+          <input name="t_start" value="{{ form.t_start }}" class="border rounded p-2 w-full" />
+        </label>
+        <label class="block">
+          <div class="text-xs text-gray-600">t_end (YYYY-MM-DD HH:MM:SS)</div>
+          <input name="t_end" value="{{ form.t_end }}" class="border rounded p-2 w-full" />
+        </label>
+      </div>
+
+      <!-- Mag range -->
+      <div class="md:col-span-2 grid grid-cols-2 gap-3">
+        <label class="block">
+          <div class="text-xs text-gray-600">m_low</div>
+          <input name="m_low" value="{{ form.m_low }}" class="border rounded p-2 w-full" />
+        </label>
+        <label class="block">
+          <div class="text-xs text-gray-600">m_high</div>
+          <input name="m_high" value="{{ form.m_high }}" class="border rounded p-2 w-full" />
+        </label>
+      </div>
+
+      <div class="md:col-span-2">
+        <button class="px-4 py-2 rounded bg-indigo-600 text-white">Run</button>
+      </div>
+    </form>
+
+    {% if stats %}
+      <div class="text-sm mb-4">
+        <div><strong>Rows returned:</strong> {{ stats.count }}</div>
+        <div><strong>Total time:</strong> {{ "%.3f"|format(stats.total_sec) }} s</div>
+        <div><strong>Avg per row:</strong> {{ "%.2f"|format(stats.avg_ms) }} ms</div>
+        <div><strong>Cache:</strong> {{ 'HIT' if stats.cached else 'MISS' }}</div>
+      </div>
+
+      {% if results %}
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead>
+              <tr class="text-left border-b">
+                <th class="py-2 pr-4">time</th>
+                <th class="py-2 pr-4">lat</th>
+                <th class="py-2 pr-4">long</th>
+                <th class="py-2 pr-4">id</th>
+                <th class="py-2 pr-4">mag</th>
+                <th class="py-2 pr-4">place</th>
+                <th class="py-2 pr-4">km</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in results %}
+                <tr class="border-b">
+                  <td class="py-1 pr-4">{{ r.time }}</td>
+                  <td class="py-1 pr-4">{{ r.latitude }}</td>
+                  <td class="py-1 pr-4">{{ r.longitude }}</td>
+                  <td class="py-1 pr-4">{{ r.id }}</td>
+                  <td class="py-1 pr-4">{{ r.mag }}</td>
+                  <td class="py-1 pr-4">{{ r.place }}</td>
+                  <td class="py-1 pr-4">{% if r.km is defined %}{{ r.km }}{% endif %}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <p class="text-xs text-gray-500 mt-2">Showing up to 50 rows.</p>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock %}

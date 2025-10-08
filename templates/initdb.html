@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="bg-white rounded shadow p-8 max-w-2xl">
+    <h2 class="text-xl font-semibold mb-4">Load all_month.csv → SQLite (timed)</h2>
+    <form method="post" enctype="multipart/form-data" class="space-y-3">
+      <input type="file" name="csv_file" accept=".csv" required class="block w-full text-sm" />
+      <button class="px-4 py-2 rounded bg-indigo-600 text-white">Load & Build Indexes</button>
+    </form>
+
+    {% if metrics %}
+      <div class="mt-6 text-sm">
+        <div><strong>Rows loaded:</strong> {{ metrics.row_count }}</div>
+        <div><strong>Load time:</strong> {{ "%.3f"|format(metrics.load_seconds) }} s</div>
+        <div><strong>Index times:</strong></div>
+        <ul class="list-disc ml-6">
+          {% for k,v in metrics.index_seconds.items() %}
+            <li>{{ k }}: {{ "%.3f"|format(v) }} s</li>
+          {% endfor %}
+        </ul>
+        <div class="mt-2"><strong>Total time:</strong> {{ "%.3f"|format(metrics.total_seconds) }} s</div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

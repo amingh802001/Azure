@@ -1,0 +1,8 @@
+Flask==3.0.3
+SQLAlchemy==2.0.32
+pandas==2.2.2
+python-dotenv==1.0.1
+redis==5.0.7
+Werkzeug==3.0.3
+gunicorn
+urllib3<2
